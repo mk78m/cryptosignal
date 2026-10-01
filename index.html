@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#09111d">
+  <meta name="description" content="داشبورد تحلیل بازار رمزارز بر پایه داده‌های واقعی بازار و کندل‌های OHLCV">
+  <title>نبض بازار | داشبورد تحلیل رمزارز</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="analysis-engine.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#main" aria-label="نبض بازار، صفحهٔ اصلی">
+      <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M3 12h4l2.2-6 4.1 12 2.4-6H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <span class="brand-copy"><strong>نبض بازار</strong><small>دادهٔ واقعی، تحلیل شفاف</small></span>
+    </a>
+    <div class="topbar-actions">
+      <div class="live-pill" id="connection" role="status" aria-live="polite" data-state="idle"><i aria-hidden="true"></i><span id="connection-status">در حال اتصال</span></div>
+      <button type="button" id="refresh-button" class="btn-refresh" aria-label="به‌روزرسانی داده‌ها">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5M5.6 9A7 7 0 0 1 18 6l2 2M4 16l2 2a7 7 0 0 0 12.4-3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>دریافت تازه</span>
+      </button>
+    </div>
+  </header>
+
+  <main id="main" class="container">
+    <section class="hero" aria-labelledby="page-title">
+      <div class="hero-copy">
+        <div class="eyebrow"><span class="eyebrow-mark" aria-hidden="true"></span>رصد بازار · تحلیل تکنیکال</div>
+        <h1 id="page-title">نبض <span>بازار رمزارز</span></h1>
+        <p class="intro">قیمت‌ها، کندل‌های ساعتی و سنجه‌های تحلیلی را در یک نمای روشن دنبال کنید. تمام خروجی‌ها از دادهٔ دریافتی بازار ساخته می‌شوند.</p>
+        <div class="hero-note"><span aria-hidden="true">↙</span> یک دارایی را برای دیدن جزئیات و تحلیل انتخاب کنید.</div>
+      </div>
+      <aside class="schedule-card" aria-label="تنظیمات و زمان‌بندی دریافت داده">
+        <div class="schedule-top"><span class="schedule-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v5l3.5 2"/></svg></span><div><strong>زمان‌بندی دریافت</strong><small>به‌روزرسانی خودکار بازار</small></div></div>
+        <label class="refresh-control" for="refresh-interval"><span class="control-label">فاصلهٔ به‌روزرسانی</span>
+          <select id="refresh-interval" aria-label="بازهٔ به‌روزرسانی خودکار">
+            <option value="5">هر ۵ دقیقه</option><option value="15">هر ۱۵ دقیقه</option><option value="30">هر ۳۰ دقیقه</option><option value="60" selected>هر ۶۰ دقیقه</option>
+          </select>
+        </label>
+        <div class="schedule-times">
+          <div><span>آخرین دریافت</span><b id="last-updated">—</b></div>
+          <div><span>دریافت بعدی</span><b id="next-refresh">—</b></div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="markets-section" aria-labelledby="markets-title">
+      <div class="section-head">
+        <div class="section-title-wrap"><span class="section-kicker">MARKET WATCH</span><h2 id="markets-title">بازارهای منتخب</h2><p>برای مشاهدهٔ نمودار و تحلیل، یک بازار را انتخاب کنید.</p></div>
+        <span class="source-summary" id="source-summary"><span class="source-dot" aria-hidden="true"></span>در انتظار داده</span>
+      </div>
+      <section id="market-grid" class="market-grid" aria-label="فهرست بازارها" aria-live="polite" aria-busy="true">
+        <div class="market-placeholder" aria-hidden="true"><span></span><span></span><span></span></div>
+      </section>
+    </section>
+
+    <section class="analysis-section" aria-label="تحلیل تکنیکال بازار انتخاب‌شده">
+      <div class="analysis-heading">
+        <div><span class="section-kicker">MARKET ANALYSIS</span><div class="selected-title"><span class="selected-indicator" aria-hidden="true"></span><h2 id="selected-market-name">—</h2></div></div>
+        <span class="detail-badge">تحلیل بازار انتخاب‌شده</span>
+      </div>
+
+      <div class="chart-panel panel">
+        <div class="panel-head"><div><span class="panel-overline">PRICE ACTION</span><h3>نمودار کندل‌استیک</h3></div><span class="chart-tag"><i aria-hidden="true"></i>تایم‌فریم ۱ ساعته <b>·</b> دادهٔ OHLCV</span></div>
+        <div class="chart-container">
+          <div id="chart-empty" class="chart-empty"><span class="empty-icon" aria-hidden="true">⌁</span><strong>در انتظار دادهٔ نمودار</strong><small>پس از دریافت کندل‌های معتبر، نمودار در این بخش نمایش داده می‌شود.</small></div>
+          <canvas id="chart-canvas" class="chart-canvas" height="320" aria-label="نمودار کندل‌های بازار انتخاب‌شده"></canvas>
+        </div>
+      </div>
+      <p id="archive-status" class="archive-status" role="status" aria-live="polite">در انتظار دریافت کندل روزانه و وضعیت آرشیو…</p>
+
+      <div class="analysis-grid">
+        <section class="panel status-panel" aria-labelledby="status-title">
+          <div class="panel-head"><div><span class="panel-overline">TECHNICAL OUTLOOK</span><h3 id="status-title">سیگنال و وضعیت بازار</h3></div><span class="sub-label">خلاصهٔ تحلیل</span></div>
+          <div id="technical-status" class="technical-status" aria-live="polite"><div class="status-box"><div class="loading-inline"><span class="spinner" aria-hidden="true"></span>در حال ارزیابی اندیکاتورها…</div></div></div>
+        </section>
+        <section class="panel risk-panel" aria-labelledby="risk-title">
+          <div class="panel-head"><div><span class="panel-overline">RISK PARAMETERS</span><h3 id="risk-title">مدیریت ریسک <span class="inline-muted">ATR(14)</span></h3></div><span class="sub-label">برآورد تحلیلی</span></div>
+          <div id="risk-details" class="risk-details" aria-live="polite"><div class="risk-placeholder">در انتظار داده‌های تحلیلی…</div></div>
+        </section>
+      </div>
+
+      <section class="panel indicators-panel" aria-labelledby="indicators-title">
+        <div class="panel-head indicators-heading"><div><span class="panel-overline">INDICATOR MATRIX</span><h3 id="indicators-title">ماتریس اندیکاتورها</h3><p class="panel-description">سیگنال، وزن تطبیقی و سنجهٔ تاریخی هر اندیکاتور</p></div><span class="indicator-count">۳۰ اندیکاتور <b>·</b> Walk-forward</span></div>
+        <div id="indicator-grid" class="indicator-grid" aria-live="polite"><div class="empty-ind">در انتظار ارزیابی دادهٔ بازار…</div></div>
+      </section>
+    </section>
+
+    <section id="notice" class="notice" role="status" aria-live="polite" hidden></section>
+    <footer><span class="disclaimer"><span aria-hidden="true">ⓘ</span> داده‌ها ممکن است با تأخیر ارائه شوند؛ این داشبورد توصیهٔ مالی نیست.</span><span>منبع دادهٔ بازار: <b>Ramzinex</b></span></footer>
+  </main>
+</body>
+</html>

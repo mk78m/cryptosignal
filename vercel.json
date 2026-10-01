@@ -1,0 +1,8 @@
+{
+  "crons": [
+    { "path": "/api/archive?cron=1&market=BTC/USDT&timeframe=1h", "schedule": "0 * * * *" },
+    { "path": "/api/archive?cron=1&market=BTC/USDT&timeframe=1d", "schedule": "10 0 * * *" },
+    { "path": "/api/archive?cron=1&market=ETH/USDT&timeframe=1h", "schedule": "30 * * * *" },
+    { "path": "/api/archive?cron=1&market=ETH/USDT&timeframe=1d", "schedule": "20 0 * * *" }
+  ]
+}
